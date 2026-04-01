@@ -1,477 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Fire Science & Operations Examination</title>
-    <!-- Fonts & Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f4f8;
-            color: #1e2a3e;
-            padding: 24px 20px;
-        }
-        .exam-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .exam-header {
-            background: #b91c1c;
-            color: white;
-            padding: 24px 32px;
-            border-bottom: 6px solid #facc15;
-        }
-        .exam-header h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-        .exam-header p {
-            margin-top: 10px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-        .stats-bar {
-            background: #1e293b;
-            padding: 12px 28px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            color: #e2e8f0;
-            gap: 12px;
-            font-weight: 500;
-        }
-        .progress-badge {
-            background: #334155;
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-        }
-        .submit-area {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-        .btn {
-            border: none;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-        .btn-primary {
-            background: #facc15;
-            color: #1e293b;
-        }
-        .btn-primary:hover {
-            background: #eab308;
-            transform: scale(0.98);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #cbd5e1;
-            color: #334155;
-        }
-        .btn-outline:hover {
-            background: #f1f5f9;
-        }
-        .questions-grid {
-            padding: 28px 28px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            background: #fefefe;
-        }
-        .question-card {
-            background: white;
-            border-radius: 24px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-            transition: all 0.1s;
-            overflow: hidden;
-        }
-        .question-header {
-            background: #f8fafc;
-            padding: 16px 24px;
-            border-bottom: 1px solid #e9eef3;
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .q-num {
-            font-weight: 800;
-            background: #e2e3e8;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            color: #0f172a;
-        }
-        .q-text {
-            font-weight: 600;
-            font-size: 1rem;
-            color: #0f172a;
-            line-height: 1.4;
-            flex: 1;
-        }
-        .options {
-            padding: 18px 24px 20px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: white;
-        }
-        .option {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 16px;
-            background: #ffffff;
-            transition: background 0.1s;
-            border: 1px solid #eef2f6;
-        }
-        .option:hover {
-            background: #fef9e3;
-            border-color: #facc1540;
-        }
-        input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #b91c1c;
-            cursor: pointer;
-        }
-        .option-label {
-            font-weight: 500;
-            color: #1e2a3e;
-            font-size: 0.95rem;
-        }
-        .result-overlay {
-            margin-top: 20px;
-            padding: 24px 28px;
-            background: #f1f5f9;
-            border-top: 2px solid #cbd5e1;
-            border-radius: 28px 28px 0 0;
-        }
-        .score-card {
-            background: white;
-            border-radius: 28px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 6px 12px -8px rgba(0,0,0,0.1);
-        }
-        .score-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #b91c1c;
-        }
-        .review-table {
-            margin-top: 28px;
-            max-height: 500px;
-            overflow-y: auto;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-        }
-        .review-item {
-            display: flex;
-            padding: 12px 20px;
-            border-bottom: 1px solid #e9eef3;
-            font-size: 0.85rem;
-            gap: 12px;
-            background: white;
-        }
-        .review-correct {
-            background: #e6f7ec;
-            border-left: 5px solid #15803d;
-        }
-        .review-wrong {
-            background: #fff5f5;
-            border-left: 5px solid #b91c1c;
-        }
-        .footer-note {
-            text-align: center;
-            font-size: 0.75rem;
-            padding: 20px;
-            color: #475569;
-        }
-        @media (max-width: 700px) {
-            .stats-bar { flex-direction: column; align-items: flex-start; }
-            .question-header { flex-direction: column; align-items: flex-start; }
-            .options { padding: 14px 18px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Fire Science & Operations Examination</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --red:        #b91c1c;
+      --red-dark:   #991b1b;
+      --red-light:  #fee2e2;
+      --gold:       #f59e0b;
+      --gold-light: #fef3c7;
+      --ink:        #0f172a;
+      --ink-mid:    #334155;
+      --ink-soft:   #64748b;
+      --surface:    #f8fafc;
+      --white:      #ffffff;
+      --border:     #e2e8f0;
+      --green:      #15803d;
+      --green-bg:   #dcfce7;
+      --wrong-bg:   #fff1f2;
+      --radius:     16px;
+      --radius-sm:  8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f1f5f9;
+      background-image: radial-gradient(ellipse at 20% 0%, rgba(185,28,28,0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 100%, rgba(245,158,11,0.07) 0%, transparent 50%);
+      min-height: 100vh;
+      color: var(--ink);
+    }
+
+    /* ── Header ── */
+    .exam-header {
+      background: var(--red-dark);
+      background-image: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 60%, #dc2626 100%);
+      color: #fff;
+      padding: 28px 40px;
+      border-bottom: 4px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    .exam-header::before {
+      content:'';
+      position:absolute; inset:0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.015) 30px, rgba(255,255,255,0.015) 60px);
+      pointer-events:none;
+    }
+    .header-inner { position:relative; max-width:1280px; margin:0 auto; display:flex; align-items:center; gap:20px; }
+    .header-icon { font-size:2.8rem; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+    .header-text h1 { font-family:'Syne',sans-serif; font-size:1.75rem; font-weight:800; letter-spacing:-.5px; line-height:1.2; }
+    .header-text p  { margin-top:6px; font-size:.875rem; opacity:.8; font-weight:400; }
+    .header-chips   { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .chip { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
+            padding:3px 10px; border-radius:20px; font-size:.73rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+
+    /* ── Sticky bar ── */
+    .stats-bar {
+      background: var(--ink);
+      padding: 10px 40px;
+      display: flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+      gap:10px; position:sticky; top:0; z-index:50;
+      box-shadow: 0 4px 20px rgba(0,0,0,.25);
+    }
+    .stats-left  { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .stat-pill   { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:5px 14px;
+                   border-radius:30px; font-size:.82rem; font-weight:500; display:flex; align-items:center; gap:6px; }
+    .stat-pill strong { color:#f8fafc; }
+    .progress-wrap { display:flex; align-items:center; gap:10px; }
+    .progress-track { width:120px; height:6px; background:#334155; border-radius:10px; overflow:hidden; }
+    .progress-fill  { height:100%; background:linear-gradient(90deg, var(--gold), #f97316); border-radius:10px; transition:width .3s ease; }
+
+    .btn-submit, .btn-reset {
+      border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:700;
+      padding:9px 22px; border-radius:30px; font-size:.875rem; transition:all .15s ease;
+      display:flex; align-items:center; gap:7px;
+    }
+    .btn-submit { background:var(--gold); color:var(--ink); }
+    .btn-submit:hover:not(:disabled) { background:#d97706; transform:scale(1.02); }
+    .btn-submit:disabled { opacity:.45; cursor:not-allowed; }
+    .btn-reset  { background:transparent; border:1px solid #475569; color:#94a3b8; }
+    .btn-reset:hover { background:#1e293b; color:#e2e8f0; }
+
+    /* ── Layout ── */
+    .page-wrap { max-width:1280px; margin:0 auto; padding:28px 24px; }
+
+    .section-divider {
+      display:flex; align-items:center; gap:14px; margin:32px 0 20px;
+    }
+    .section-divider h2 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700;
+      color:var(--red); white-space:nowrap; text-transform:uppercase; letter-spacing:.05em; }
+    .section-divider::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,#fca5a5,transparent); }
+
+    /* ── Questions grid ── */
+    .questions-grid { display:flex; flex-direction:column; gap:16px; }
+
+    .question-card {
+      background:var(--white); border-radius:var(--radius); border:1px solid var(--border);
+      box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden;
+      transition:box-shadow .15s ease, transform .15s ease;
+      animation: cardIn .3s ease both;
+    }
+    @keyframes cardIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .question-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.07); }
+    .question-card.answered { border-color:#fca5a5; }
+
+    .question-header {
+      background:#fafafa; padding:14px 20px; border-bottom:1px solid var(--border);
+      display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    }
+    .q-num { font-family:'Syne',sans-serif; font-weight:800; background:var(--red); color:#fff;
+             padding:3px 11px; border-radius:20px; font-size:.72rem; letter-spacing:.04em; flex-shrink:0; }
+    .q-text { font-weight:600; font-size:.95rem; color:var(--ink); line-height:1.45; flex:1; }
+
+    .options { padding:14px 20px 18px; display:flex; flex-direction:column; gap:9px; }
+    .option {
+      display:flex; align-items:center; gap:12px; padding:9px 14px;
+      border-radius:var(--radius-sm); border:1.5px solid var(--border);
+      cursor:pointer; transition:all .1s ease; background:var(--white);
+    }
+    .option:hover { border-color:#fca5a5; background:#fff7f7; }
+    .option.selected { border-color:var(--red); background:var(--red-light); }
+    .option.correct-ans { border-color:var(--green); background:var(--green-bg); }
+    .option.wrong-ans   { border-color:var(--red);   background:var(--wrong-bg); }
+    .option.show-correct{ border-color:var(--green); background:var(--green-bg); }
+
+    input[type="radio"] { width:16px; height:16px; accent-color:var(--red); cursor:pointer; flex-shrink:0; }
+    .option-label { font-size:.9rem; font-weight:500; color:var(--ink); line-height:1.4; }
+
+    /* ── Results ── */
+    .result-panel {
+      background:var(--white); border-radius:var(--radius); border:1px solid var(--border);
+      box-shadow:0 8px 32px rgba(0,0,0,.08); margin-top:28px; overflow:hidden;
+      animation: cardIn .4s ease both;
+    }
+    .score-hero {
+      background:linear-gradient(135deg,var(--red-dark),var(--red));
+      color:#fff; padding:32px; text-align:center;
+    }
+    .score-hero h2 { font-family:'Syne',sans-serif; font-size:1.1rem; opacity:.8; margin-bottom:10px; text-transform:uppercase; letter-spacing:.08em; }
+    .score-big { font-family:'Syne',sans-serif; font-size:4rem; font-weight:800; line-height:1; }
+    .score-pct { font-size:1.25rem; font-weight:600; margin-top:6px; opacity:.9; }
+    .score-verdict { display:inline-block; margin-top:12px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
+                     padding:5px 16px; border-radius:20px; font-size:.85rem; font-weight:600; }
+    .score-stats { display:grid; grid-template-columns:repeat(3,1fr); }
+    .ss-item { padding:18px; text-align:center; border-right:1px solid var(--border); }
+    .ss-item:last-child { border-right:none; }
+    .ss-val { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; }
+    .ss-val.green { color:var(--green); }
+    .ss-val.red   { color:var(--red); }
+    .ss-label { font-size:.75rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; margin-top:3px; }
+
+    .review-header { padding:14px 20px; background:#f8fafc; border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+                     font-family:'Syne',sans-serif; font-size:.85rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-mid); }
+    .review-list { max-height:600px; overflow-y:auto; }
+    .review-item {
+      display:flex; gap:12px; padding:11px 20px; border-bottom:1px solid var(--border);
+      font-size:.82rem; align-items:flex-start;
+    }
+    .review-item.r-correct { background:#f0fdf4; border-left:4px solid var(--green); }
+    .review-item.r-wrong   { background:#fff1f2; border-left:4px solid var(--red); }
+    .review-qnum { font-family:'Syne',sans-serif; font-weight:800; min-width:36px; margin-top:1px; }
+    .review-body { flex:1; }
+    .review-qtext { font-weight:600; color:var(--ink); margin-bottom:4px; line-height:1.35; }
+    .review-answers { color:var(--ink-soft); }
+    .ans-correct { color:var(--green); font-weight:600; }
+    .ans-wrong   { color:var(--red); font-weight:600; }
+    .icon-badge { font-size:1rem; margin-top:1px; flex-shrink:0; }
+
+    /* ── Footer ── */
+    .footer { text-align:center; padding:20px; color:var(--ink-soft); font-size:.75rem; }
+
+    @media(max-width:640px){
+      .exam-header { padding:20px 20px; }
+      .header-text h1 { font-size:1.35rem; }
+      .stats-bar { padding:10px 16px; }
+      .progress-track { width:80px; }
+      .page-wrap { padding:20px 16px; }
+      .question-header, .options { padding:12px 14px 14px; }
+      .score-stats { grid-template-columns:1fr; }
+      .ss-item { border-right:none; border-bottom:1px solid var(--border); }
+    }
+  </style>
 </head>
 <body>
-<div id="root"></div>
 
-<!-- React & ReactDOM & Babel Standalone for simplicity -->
-<script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
+<div class="exam-header">
+  <div class="header-inner">
+    <div class="header-icon">🔥</div>
+    <div class="header-text">
+      <h1>Fire Science &amp; Operations Examination</h1>
+      <p>Bureau of Fire Protection · RA 9514 · Fire Science · Arson Investigation · Equipment &amp; PPE</p>
+      <div class="header-chips">
+        <span class="chip">180 Items</span>
+        <span class="chip">Multiple Choice</span>
+        <span class="chip">BFP Competency</span>
+      </div>
+    </div>
+  </div>
+</div>
 
-<script type="text/babel">
-    // ---------- FULL QUESTION BANK (180 items) ----------
-    // Based on provided content: Items 1-180 with answer keys.
-    const FULL_QUESTIONS = [
-        // Part 1: Fire Science (1-40)
-        { id:1, text:"Fire is a rapid, self-sustaining oxidation process accompanied by the evolution of:", options:["Only light","Only heat","Heat and light of varying intensity","Smoke and ash"], correct:2 },
-        { id:2, text:"The 'Triangle of Fire' consists of which three elements?", options:["Fuel, Heat, Carbon Dioxide","Fuel, Heat, Oxygen","Fuel, Oxygen, Chemical Reaction","Heat, Oxygen, Smoke"], correct:1 },
-        { id:3, text:"The fourth element added to create the 'Fire Tetrahedron' is:", options:["Carbon Monoxide","Flash point","Uninhibited chemical chain reaction","Catalyst"], correct:2 },
-        { id:4, text:"At what percentage of oxygen in the air does a person typically become unconscious?", options:["21%","15%","12%","9%"], correct:3 },
-        { id:5, text:"Heat transfer through direct contact or through solid materials like metals is called:", options:["Radiation","Convection","Conduction","Combustion"], correct:2 },
-        { id:6, text:"Heat transfer involving the movement of liquids or gases is known as:", options:["Convection","Radiation","Conduction","Vaporization"], correct:0 },
-        { id:7, text:"The minimum temperature at which a liquid fuel gives off sufficient vapor to form an ignitable mixture is the:", options:["Fire point","Flash point","Ignition temperature","Boiling point"], correct:1 },
-        { id:8, text:"The temperature at which a substance will ignite spontaneously in air without an external spark is the:", options:["Flash point","Fire point","Ignition temperature","Vapor pressure"], correct:2 },
-        { id:9, text:"Which stage of fire is characterized by the initial ignition and a small, localized flame?", options:["Growth","Fully developed","Decay","Incipient"], correct:3 },
-        { id:10, text:"A 'Flashover' occurs when:", options:["The fire is extinguished by water","Everything in a confined area ignites almost simultaneously","Smoke begins to roll over the ceiling","The fire runs out of oxygen"], correct:1 },
-        { id:11, text:"'Flameover' (or Rollover) is a condition where:", options:["Liquid fuel spills over a container","Fire gases trapped at the upper level of a room ignite","The building collapses","Fire moves from one room to another via conduction"], correct:1 },
-        { id:12, text:"Which class of fire involves ordinary combustibles like wood, paper, and cloth?", options:["Class A","Class B","Class C","Class D"], correct:0 },
-        { id:13, text:"Class B fires involve:", options:["Energized electrical equipment","Combustible metals","Flammable liquids and gases","Kitchen oils and fats"], correct:2 },
-        { id:14, text:"A fire involving a computer or a toaster while plugged in is classified as:", options:["Class A","Class B","Class C","Class K"], correct:2 },
-        { id:15, text:"Magnesium and Sodium fires are categorized as:", options:["Class B","Class C","Class D","Class K"], correct:2 },
-        { id:16, text:"The weight of a volume of pure gas compared to the weight of an equal volume of dry air is:", options:["Specific gravity","Vapor density","Vapor pressure","Molecular weight"], correct:1 },
-        { id:17, text:"What is the primary oxidizing agent in most fires?", options:["Nitrogen","Carbon Dioxide","Oxygen","Hydrogen"], correct:2 },
-        { id:18, text:"The 'Decay' stage of fire is usually caused by the exhaustion of:", options:["Heat","Fuel or Oxygen","Chemical reaction","Nitrogen"], correct:1 },
-        { id:19, text:"If oxygen is diluted below ____%, a fire will generally be extinguished.", options:["21%","18%","15%","10%"], correct:2 },
-        { id:20, text:"Which method of heat transfer involves electromagnetic waves?", options:["Conduction","Radiation","Convection","Evaporation"], correct:1 },
-        { id:21, text:"The lowest temperature at which a liquid produces enough vapor to continue burning after ignition is the:", options:["Flash point","Fire point","Melting point","Boiling point"], correct:1 },
-        { id:22, text:"What is the percentage of Oxygen in normal atmospheric air?", options:["16%","21%","78%","1%"], correct:1 },
-        { id:23, text:"Which component of the Fire Tetrahedron represents the source of ignition?", options:["Fuel","Oxygen","Heat","Chemical Reaction"], correct:2 },
-        { id:24, text:"A 'Backdraft' is a potential hazard during which stage of fire if oxygen is suddenly introduced?", options:["Incipient","Growth","Fully Developed","Smoldering/Decay"], correct:3 },
-        { id:25, text:"The smallest particles of elements that take part in a chemical reaction are:", options:["Molecules","Electrons","Atoms","Protons"], correct:2 },
-        { id:26, text:"Which of the following is a 'Solid' fuel?", options:["Turpentine","Acetylene","Finely divided coal","Varnish"], correct:2 },
-        { id:27, text:"'Vapor Pressure' is the force exerted by molecules on the surface of a liquid at:", options:["Boiling","Freezing","Equilibrium","Ignition"], correct:2 },
-        { id:28, text:"Heat is a form of ______ energy.", options:["Potential","Kinetic","Static","Chemical"], correct:1 },
-        { id:29, text:"Which term refers to the temperature at which a liquid transforms into vapor?", options:["Fire point","Flash point","Boiling point","Ignition point"], correct:2 },
-        { id:30, text:"Carbon Monoxide is a byproduct of:", options:["Complete combustion","Incomplete combustion","Rapid cooling","Vaporization"], correct:1 },
-        { id:31, text:"Which material has a high thermal conductivity?", options:["Wood","Paper","Copper","Rubber"], correct:2 },
-        { id:32, text:"The 'Growth' stage is influenced heavily by the _____ of the room.", options:["Color","Configuration and Ventilation","Furniture brand","Floor material"], correct:1 },
-        { id:33, text:"A 'thermal layer' in a room fire consists of:", options:["Cold air at the top, hot smoke at the bottom","Uniformly distributed heat","Hot gases at the top, cooler air at the bottom","Only oxygen"], correct:2 },
-        { id:34, text:"Which fuel exists in a gaseous state?", options:["Propane","Kerosene","Plastic","Olive Oil"], correct:0 },
-        { id:35, text:"The process of breaking down a solid fuel into flammable gases through heat is:", options:["Vaporization","Pyrolysis","Fusion","Condensation"], correct:1 },
-        { id:36, text:"Which element is the most abundant in the atmosphere (approx. 78%)?", options:["Oxygen","Hydrogen","Nitrogen","Carbon"], correct:2 },
-        { id:37, text:"Specific gravity is used to compare the weight of a liquid to:", options:["Air","Water","Oil","Gasoline"], correct:1 },
-        { id:38, text:"Friction is a source of:", options:["Fuel","Chemical action","Heat","Oxygen"], correct:2 },
-        { id:39, text:"In the fire tetrahedron, 'smothering' removes which element?", options:["Heat","Fuel","Oxygen","Chemical Reaction"], correct:2 },
-        { id:40, text:"'Cooling' a fire primarily removes:", options:["Fuel","Heat","Oxygen","Chain reaction"], correct:1 },
-        // Part 2: Operations (41-90) - following answer key mapping
-        { id:41, text:"What is the first 'Initial Action' a firefighter should take upon discovering a fire?", options:["Attack the fire","Size up the fire","Report the fire","Evacuate personnel"], correct:2 }, // Report the fire
-        { id:42, text:"'Size-up' involves evaluating:", options:["The height of the fire truck","The location, size, and type of fire","The cost of the building","The manufacturer of the hoses"], correct:1 },
-        { id:43, text:"Which attack method involves applying the extinguishing agent directly to the seat of the fire?", options:["Indirect Attack","Fog Attack","Direct Attack","Defensive Attack"], correct:2 },
-        { id:44, text:"An 'Indirect Attack' is used when:", options:["You can see the base of the fire clearly","The seat of the fire is obstructed or the space is too hot","The fire is in the incipient stage","You are using a fire extinguisher"], correct:1 },
-        { id:45, text:"What is the purpose of 'Ventilation'?", options:["To add oxygen to make the fire burn faster","To remove smoke, heat, and toxic gases","To protect the furniture from water","To signal other fire trucks"], correct:1 },
-        { id:46, text:"'Salvage' operations are intended to:", options:["Find the cause of the fire","Extinguish the final embers","Protect properties of value from preventable damage","Search for victims"], correct:2 },
-        { id:47, text:"'Overhaul' is the final task performed to:", options:["Rescue remaining victims","Prevent the fire from rekindling","Document the names of the firefighters","Clean the fire truck"], correct:1 },
-        { id:48, text:"'Confinement' aims to:", options:["Put out the fire immediately","Keep the fire in the smallest possible area","Trap victims for easier rescue","Prevent smoke from escaping"], correct:1 },
-        { id:49, text:"Which phase of firefighting involves protecting uninvolved buildings from the fire?", options:["Confinement","Cover Exposure","Salvage","Overhaul"], correct:1 },
-        { id:50, text:"The 'P.A.S.S.' acronym for using a fire extinguisher stands for:", options:["Push, Aim, Squeeze, Sweep","Pull, Aim, Squeeze, Sweep","Pull, Activate, Squeeze, Swipe","Press, Aim, Shake, Sweep"], correct:1 },
-        { id:51, text:"In hose handling, what is the minimum number of personnel needed for sustained operation of a 1.5-inch hose?", options:["1","2 (plus nozzleman)","5","10"], correct:1 },
-        { id:52, text:"The 'Fog Attack' is particularly useful when:", options:["The fire is outside","Overhead gases are burning (Rollover)","There is no smoke","Using a dry chemical extinguisher"], correct:1 },
-        { id:53, text:"'Active Desmoking' is authorized for:", options:["Only Class A fires","Only Class B fires","All classes of fire","Only after the fire is out"], correct:2 },
-        { id:54, text:"What is the 'Bucket Brigade'?", options:["A modern BFP unit","The first known firefighting unit organized thousands of years B.C.","A tool used to carry equipment","A type of water tank"], correct:1 },
-        { id:55, text:"When performing ventilation, you should always consider:", options:["The time of day","The wind direction","The color of the smoke","The age of the building"], correct:1 },
-        { id:56, text:"'Triage' is the act of:", options:["Putting out three fires at once","Separating rescued victims to facilitate medical assistance","Using three types of hoses","Investigating the three sides of the fire triangle"], correct:1 },
-        { id:57, text:"Which strategy is used when a fire is too large to enter the building?", options:["Offensive","Defensive","Marginal","Indirect"], correct:1 },
-        { id:58, text:"The 'Pre-Alarm Size Up' is based on:", options:["Arriving at the scene","Information received while in the station/en route","The post-fire investigation","The owner's statement"], correct:1 },
-        { id:59, text:"'Search and Rescue' is a priority when the strategy is:", options:["Defensive","Marginal","Offensive","Overhaul"], correct:2 },
-        { id:60, text:"Hydraulic ventilation uses ______ to draw smoke out of a window.", options:["Fans","Fog streams","Ladders","Shovels"], correct:1 },
-        { id:61, text:"A 'Catch-all' is used during which operation?", options:["Rescue","Ventilation","Salvage","Investigation"], correct:2 },
-        { id:62, text:"Where should 'Overhaul' begin?", options:["At the front door","At the perimeter and work toward the point of origin","At the roof","Only where there is no smoke"], correct:1 },
-        { id:63, text:"What does OSL stand for in firefighting techniques?", options:["Only Safety Leader","On-Scene Leader","Office of Safety Law","Open Safety Latch"], correct:1 },
-        { id:64, text:"Before entering a fire area, you should check the door for heat using:", options:["Your bare palm","The back of your hand","A thermometer","Water"], correct:1 },
-        { id:65, text:"Vertical ventilation involves making an opening in the:", options:["Wall","Floor","Roof","Door"], correct:2 },
-        { id:66, text:"What is 'Exposure'?", options:["Any person watching the fire","Any building or material likely to become involved with the existing fire","The amount of water used","The time the fire lasted"], correct:1 },
-        { id:67, text:"'Initial Attack' is performed by:", options:["The fire investigator","The first responders/RRT","The building owner","The police"], correct:1 },
-        { id:68, text:"Which hose nozzle provides a variety of stream patterns?", options:["Solid stream nozzle","Vari-nozzle","Smooth bore nozzle","Pipe nozzle"], correct:1 },
-        { id:69, text:"'Forcible Entry' is used when:", options:["The door is unlocked","Regular entry is blocked or locked","The fire is already out","The owner is present"], correct:1 },
-        { id:70, text:"When attacking a fire in a room, you should stay:", options:["As high as possible","Low to the floor","In the middle of the room","Near the ceiling"], correct:1 },
-        { id:71, text:"What is 'NFTI'?", options:["National Fire Truck Institute","Naval Firefighting Thermal Imager","New Fire Technology Insurance","None of the above"], correct:3 },
-        { id:72, text:"A 'Secondary Search' is conducted:", options:["At the same time as the primary search","Only if the owner asks","After the fire is under control and visibility improves","By the police"], correct:2 },
-        { id:73, text:"In the 10 Phases of Fire, 'Rescue' is the:", options:["1st phase","2nd phase","9th phase","Last phase"], correct:1 },
-        { id:74, text:"What is 'Tactical Ventilation'?", options:["Opening all windows at once","The planned and systematic removal of smoke and heat","Using a hose to push smoke","Waiting for the fire to break the glass"], correct:1 },
-        { id:75, text:"A 'Strategic Plan' is:", options:["A list of tools","An overall plan for controlling an incident","A map of the city","A phone directory"], correct:1 },
-        { id:76, text:"The 'Incident Commander' is responsible for:", options:["Only driving the truck","Overall management of the incident","Holding the hose","Investigating the cause"], correct:1 },
-        { id:77, text:"Which is a type of mechanical ventilation?", options:["Opening a door","Breaking a window","Using a smoke ejector (fan)","Wind"], correct:2 },
-        { id:78, text:"What is the 'Point of Origin'?", options:["Where the fire truck parked","The exact location where the fire started","The fire station","The hospital"], correct:1 },
-        { id:79, text:"Water is the most common extinguishing agent because of its:", options:["Color","High heat absorption capacity","Weight","Taste"], correct:1 },
-        { id:80, text:"'Drafting' water means:", options:["Drawing water from a static source like a pond","Using a fire hydrant","Filling the truck at the station","Carrying water in buckets"], correct:0 },
-        { id:81, text:"Which firefighting agent is best for Class C fires?", options:["Water","Foam","CO2 or Dry Chemical","Wet Chemical"], correct:2 },
-        { id:82, text:"A 'Siamese' connection is used to:", options:["Split one hose into two","Combine two hoses into one","Connect a hose to a hydrant","Change the nozzle"], correct:1 },
-        { id:83, text:"A 'Wye' connection is used to:", options:["Combine two lines","Split one line into two or more","Drain the hose","Store the hose"], correct:1 },
-        { id:84, text:"Fire hoses are typically stored in:", options:["Buckets","Racks or reels","Boxes","Bags"], correct:1 },
-        { id:85, text:"'Checking for fire spread' is a key part of:", options:["Sizing up","Overhaul","Salvage","Rescue"], correct:1 },
-        { id:86, text:"What is the primary danger of 'Backdraft'?", options:["Excessive water damage","Explosive re-ignition","The fire going out too fast","Too much smoke"], correct:1 },
-        { id:87, text:"In a high-rise fire, the 'Base' is usually located:", options:["On the roof","On the fire floor","Two floors below the fire floor","Outside the building"], correct:2 },
-        { id:88, text:"What is a 'Standpipe'?", options:["A tool for prying","A vertical pipe in a building for hose attachment","A type of ladder","A hydrant"], correct:1 },
-        { id:89, text:"The 'Fire Brigade' is required for establishments with at least:", options:["10 persons","20 persons","50 persons","100 persons"], correct:2 },
-        { id:90, text:"'Life Safety' is always the:", options:["Last priority","Secondary priority","Number one priority","Optional priority"], correct:2 },
-        // Part 3: Tools & PPE (91-120) - based on keys
-        { id:91, text:"What tool has a pick on one end and a blade on the other for cutting and piercing?", options:["Flat-head axe","Pick-head axe","Sledgehammer","Crowbar"], correct:1 },
-        { id:92, text:"A 'Halligan Tool' is primarily used for:", options:["Spraying water","Forcible entry and prying","Cutting wood","Breathing"], correct:1 },
-        { id:93, text:"Which PPE protects the firefighter's head from falling debris and heat?", options:["Bunker coat","Helmet","Gloves","Suspender"], correct:1 },
-        { id:94, text:"The 'OBA' (Oxygen Breathing Apparatus) is designed to:", options:["Protect the eyes","Protect the respiratory system in harmful atmospheres","Help the firefighter swim","Filter smoke using a cloth"], correct:1 },
-        { id:95, text:"The life of a single OBA canister under 'Hard Work' conditions is approximately:", options:["10 minutes","30 minutes","45 minutes","120 minutes"], correct:2 },
-        { id:96, text:"What color is the OBA (quick-starting) canister?", options:["Red","Blue","Green","Yellow"], correct:2 },
-        { id:97, text:"WARNING: OBA canisters should never come in contact with ____ as it may cause an explosion.", options:["Water","Oil or Grease","Nitrogen","Carbon"], correct:1 },
-        { id:98, text:"Which tool is used to pull apart debris, open walls, and ceilings?", options:["Pike pole","Power saw","Nozzle","Spanner wrench"], correct:0 },
-        { id:99, text:"'Spanner Wrenches' are used to:", options:["Cut wires","Tighten or loosen hose couplings","Pry doors","Break glass"], correct:1 },
-        { id:100, text:"A 'Hard Suction Hose' is used for:", options:["Indoor firefighting","Drafting water from a static source","Connecting to a nozzle","High-pressure attack"], correct:1 },
-        { id:101, text:"Protective gloves provide thermal protection and shield against:", options:["Only heat","Only water","Cuts, punctures, and scraps","Radiation only"], correct:2 },
-        { id:102, text:"'Self-Contained Breathing Apparatus' (SCBA) provides:", options:["Filtered air from the room","A portable supply of breathable air","Only oxygen","Water to the firefighter"], correct:1 },
-        { id:103, text:"A 'Bolt Cutter' is used for:", options:["Cutting wood","Cutting heavy bolts, chains, and padlocks","Prying doors","Breaking concrete"], correct:1 },
-        { id:104, text:"Which tool is used as a lever to force apart objects or remove nails?", options:["Pick-head axe","Manual prying tools/Crowbars","Pike pole","Handsaw"], correct:1 },
-        { id:105, text:"'Hydraulic Rescue Equipment' (e.g., Jaws of Life) is used to:", options:["Spray water","Rescue victims by removing or cutting obstacles","Extinguish Class D fires","Detect smoke"], correct:1 },
-        { id:106, text:"A 'K-Tool' is specifically designed for:", options:["Cutting holes in roofs","Pulling lock cylinders","Breaking windows","Pumping water"], correct:1 },
-        { id:107, text:"Firefighter boots must be:", options:["Fashionable","Puncture-resistant and water-repellent","Made of canvas","Open-toed"], correct:1 },
-        { id:108, text:"What is the purpose of 'Turnout Gear' (Bunker Coat/Trousers)?", options:["To keep the firefighter dry","To provide thermal protection against heat","To make the firefighter visible","All of the above"], correct:3 },
-        { id:109, text:"A 'Life Safety Rope' is used for:", options:["Tying down ladders","Supporting the weight of firefighters or victims during rescue","Pulling the fire truck","Marking the fire perimeter"], correct:1 },
-        { id:110, text:"The 'Brake' on a hose reel is used to:", options:["Stop the truck","Control the deployment of the hose","Increase water pressure","Turn off the nozzle"], correct:1 },
-        { id:111, text:"Which extinguisher agent is specifically for Class K fires?", options:["Dry Chemical","CO2","Wet Chemical","Water"], correct:2 },
-        { id:112, text:"A 'Nozzle' controls:", options:["Only the flow of water","The flow, reach, and shape of the water stream","The color of the water","The tank level"], correct:1 },
-        { id:113, text:"'Ground Ladders' are used for:", options:["Only climbing to the roof","Access, escape, and ventilation","Carrying water","Breaking doors"], correct:1 },
-        { id:114, text:"A 'Flat-head axe' is a vital addition to a forcible entry team because it can be used as a:", options:["Prying tool","Striking tool","Breathing device","Hook"], correct:1 },
-        { id:115, text:"Which tool is driven by a motor and used for fast cutting?", options:["Handsaw","Power saw","Pike pole","Hammer"], correct:1 },
-        { id:116, text:"'Personal Alert Safety System' (PASS device) is used to:", options:["Talk to the captain","Alert others if a firefighter is motionless or in distress","Check the temperature","Open doors"], correct:1 },
-        { id:117, text:"A 'Dry Chemical' extinguisher works by:", options:["Cooling the fire","Interrupting the chemical chain reaction","Adding oxygen","Increasing heat"], correct:1 },
-        { id:118, text:"'Fire Boots' are often made of:", options:["Leather or Rubber","Plastic","Wood","Fabric"], correct:0 },
-        { id:119, text:"The 'Couplings' on a hose are:", options:["The ends that connect hoses together","The middle of the hose","The holes in the hose","The water pumps"], correct:0 },
-        { id:120, text:"A 'Smoke Ejector' is a type of:", options:["Extinguisher","Fan used for ventilation","Nozzle","Axe"], correct:1 },
-        // Part 4 & 5 truncated but representative: I'll add remaining crucial 121-180 based on answer key mapping using rapid generation
-    ];
-    // Expand to 180 items using incremental building (based on given keys to ensure completeness)
-    for(let i=121; i<=180; i++) {
-        FULL_QUESTIONS.push({ id:i, text:`Question ${i} (Fire Code/Arson/Definition) - Refer to standard answer key.`, options:["Option A","Option B","Option C","Option D"], correct: (i%4) } );
-    }
-    // Override specific important items (121-160) to match answer key semantics
-    const overrides = {
-        121:"Which law created the Bureau of Fire Protection (BFP) in 1991?",122:"The 'Revised Fire Code of the Philippines' is:",123:"What is the primary mandate of the BFP?",124:"In arson investigation, 'Alligatoring' refers to:",125:"Small, deep 'alligator checks' usually indicate:",126:"Which of the following is a common motive for arson?",127:"'Accelerants' are substances used to:",128:"Before cutting electrical wires at a fire scene, an investigator should:",129:"When collecting liquid samples for accelerant testing, you should use:",130:"Arson is defined as:",131:"'Prima Facie' evidence of arson includes:",132:"Who is responsible for fire safety inspections of buildings?",133:"A 'Fire Safety Practitioner' is:",134:"'Abatement' in fire law means:",135:"The 'Fire Safety Clearance' is required for:",136:"Which pattern helps an investigator find the 'Point of Origin'?",137:"If a fire spreads upward and outward from a point, it typically forms a:",138:"'Trailers' in arson are:",139:"The Bureau of Fire Protection is under which government department?",140:"'Clandestine' means:"};
-    Object.keys(overrides).forEach(k=>{ let idx=parseInt(k)-1; if(FULL_QUESTIONS[idx]) FULL_QUESTIONS[idx].text = overrides[k]; });
-    
-    // define final correct answers mapping for missing items from key list (ensure 180 total)
-    const keyMapping = {121:"RA 6975",122:"RA 9514",123:"Prevent and suppress destructive fires",124:"A charred pattern on wood resembling alligator skin",125:"Intense heat or a fast-moving fire",126:"All of the above",127:"Speed up the spread and intensity of a fire",128:"Photograph them",129:"Clean glass bottles or airtight metal cans",130:"The intentional and malicious burning of property",131:"Simultaneous fires in different parts of the building",132:"BFP",133:"A person qualified to conduct fire safety inspections",134:"Any act that removes or neutralizes a fire hazard",135:"Storing flammable liquids or hazardous materials",136:"V-pattern on walls",137:"V-shape",138:"Materials used to spread fire from one point to another",139:"DILG",140:"Secret or hidden"};
-    for(let i=121;i<=140;i++) { let q=FULL_QUESTIONS[i-1]; if(keyMapping[i]) q.text = keyMapping[i]; q.options = ["Answer A","Answer B","Answer C","Answer D"]; q.correct = 1; }
-    
-    const App = () => {
-        const [answers, setAnswers] = React.useState({});
-        const [submitted, setSubmitted] = React.useState(false);
-        const [score, setScore] = React.useState(null);
-        const [results, setResults] = React.useState([]);
-        
-        const handleAnswer = (qid, optIndex) => {
-            if(submitted) return;
-            setAnswers(prev => ({...prev, [qid]: optIndex}));
-        };
-        
-        const computeResults = () => {
-            let correctCount = 0;
-            const review = FULL_QUESTIONS.map(q => {
-                const userAns = answers[q.id] !== undefined ? answers[q.id] : -1;
-                const isCorrect = (userAns === q.correct);
-                if(isCorrect) correctCount++;
-                return {
-                    id: q.id,
-                    text: q.text,
-                    userChoice: userAns,
-                    correctChoice: q.correct,
-                    isCorrect,
-                    options: q.options
-                };
-            });
-            setScore(correctCount);
-            setResults(review);
-            setSubmitted(true);
-        };
-        
-        const resetExam = () => {
-            setAnswers({});
-            setSubmitted(false);
-            setScore(null);
-            setResults([]);
-            window.scrollTo({top:0,behavior:'smooth'});
-        };
-        
-        const answeredCount = Object.keys(answers).length;
-        
-        return (
-            <div className="exam-container">
-                <div className="exam-header">
-                    <h1>🔥 Fire Science & Operations Examination</h1>
-                    <p>Fire Science • Firefighting Operations • Equipment • Arson Investigation • Legal Mandates</p>
-                </div>
-                <div className="stats-bar">
-                    <div className="progress-badge">📋 Total Questions: 180</div>
-                    <div className="progress-badge">✅ Answered: {answeredCount} / 180</div>
-                    <div className="submit-area">
-                        {!submitted ? (
-                            <button className="btn btn-primary" onClick={computeResults} disabled={answeredCount < 180} style={{opacity: answeredCount<180?0.6:1}}>
-                                🧾 SUBMIT EXAM
-                            </button>
-                        ) : (
-                            <button className="btn btn-outline" onClick={resetExam}>⟳ Retake Exam</button>
-                        )}
-                    </div>
-                </div>
-                <div className="questions-grid">
-                    {FULL_QUESTIONS.map(q => (
-                        <div className="question-card" key={q.id}>
-                            <div className="question-header">
-                                <span className="q-num">Q{q.id}</span>
-                                <div className="q-text">{q.text}</div>
-                            </div>
-                            <div className="options">
-                                {q.options.map((opt, idx) => (
-                                    <label key={idx} className="option">
-                                        <input type="radio" name={`q-${q.id}`} value={idx} checked={answers[q.id] === idx} onChange={()=>handleAnswer(q.id, idx)} disabled={submitted} />
-                                        <span className="option-label">{String.fromCharCode(65+idx)}. {opt}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                {submitted && (
-                    <div className="result-overlay">
-                        <div className="score-card">
-                            <h2>📊 Your Score</h2>
-                            <div className="score-number">{score} / 180</div>
-                            <p style={{marginTop:8}}>Percentage: {((score/180)*100).toFixed(1)}%</p>
-                            {score >= 140 && <p style={{color:'#15803d'}}>🌟 Excellent performance!</p>}
-                        </div>
-                        <div className="review-table">
-                            <div style={{padding:"12px 20px",background:"#eef2ff",fontWeight:700}}>Detailed Review</div>
-                            {results.map(r => (
-                                <div key={r.id} className={`review-item ${r.isCorrect ? 'review-correct' : 'review-wrong'}`}>
-                                    <div style={{minWidth:48,fontWeight:600}}>Q{r.id}</div>
-                                    <div style={{flex:1}}><span style={{fontWeight:500}}>{r.text.substring(0,100)}</span><br/>
-                                        <span style={{fontSize:"0.75rem"}}>Your answer: {r.userChoice !== -1 ? String.fromCharCode(65+r.userChoice)+". "+r.options[r.userChoice] : "Not answered"} | Correct: {String.fromCharCode(65+r.correctChoice)+". "+r.options[r.correctChoice]}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                <div className="footer-note">Bureau of Fire Protection (BFP) - Examination Reference | RA 9514 & Fire Science Competency</div>
-            </div>
-        );
-    };
-    
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+<div class="stats-bar" id="statsBar">
+  <div class="stats-left">
+    <div class="stat-pill">📋 Total: <strong>180</strong></div>
+    <div class="stat-pill">✅ Answered: <strong id="answeredCount">0</strong> / 180</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <button class="btn-submit" id="btnSubmit" disabled onclick="submitExam()">🧾 Submit Exam</button>
+    <button class="btn-reset" id="btnReset" style="display:none" onclick="resetExam()">↺ Retake</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div id="questionsContainer"></div>
+  <div id="resultPanel"></div>
+  <div class="footer">Bureau of Fire Protection (BFP) · RA 9514 (Revised Fire Code of the Philippines) · Fire Science Competency Reference</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+//  COMPLETE 180-QUESTION BANK
+// ─────────────────────────────────────────
+const Q = [
+  // ── PART 1: FIRE SCIENCE (1–40) ──────────────────────────────────────────
+  {id:1,  t:"Fire is a rapid, self-sustaining oxidation process accompanied by the evolution of:", o:["Only light","Only heat","Heat and light of varying intensity","Smoke and ash"], c:2},
+  {id:2,  t:"The 'Fire Triangle' consists of which three elements?", o:["Fuel, Heat, Carbon Dioxide","Fuel, Heat, Oxygen","Fuel, Oxygen, Chemical Reaction","Heat, Oxygen, Smoke"], c:1},
+  {id:3,  t:"The fourth element added to create the 'Fire Tetrahedron' is:", o:["Carbon Monoxide","Flash point","Uninhibited chemical chain reaction","Catalyst"], c:2},
+  {id:4,  t:"At what percentage of oxygen in air does a person typically become unconscious?", o:["21%","15%","12%","9%"], c:3},
+  {id:5,  t:"Heat transfer through direct contact or through solid materials like metals is called:", o:["Radiation","Convection","Conduction","Combustion"], c:2},
+  {id:6,  t:"Heat transfer involving the movement of liquids or gases is known as:", o:["Convection","Radiation","Conduction","Vaporization"], c:0},
+  {id:7,  t:"The minimum temperature at which a liquid fuel gives off sufficient vapor to form an ignitable mixture is the:", o:["Fire point","Flash point","Ignition temperature","Boiling point"], c:1},
+  {id:8,  t:"The temperature at which a substance will ignite spontaneously in air without an external spark is the:", o:["Flash point","Fire point","Ignition temperature","Vapor pressure"], c:2},
+  {id:9,  t:"Which stage of fire is characterized by initial ignition and a small, localized flame?", o:["Growth","Fully developed","Decay","Incipient"], c:3},
+  {id:10, t:"A 'Flashover' occurs when:", o:["The fire is extinguished by water","Everything in a confined area ignites almost simultaneously","Smoke begins to roll over the ceiling","The fire runs out of oxygen"], c:1},
+  {id:11, t:"'Flameover' (Rollover) is a condition where:", o:["Liquid fuel spills over a container","Fire gases trapped at the upper level of a room ignite","The building collapses","Fire moves via conduction between rooms"], c:1},
+  {id:12, t:"Which class of fire involves ordinary combustibles like wood, paper, and cloth?", o:["Class A","Class B","Class C","Class D"], c:0},
+  {id:13, t:"Class B fires involve:", o:["Energized electrical equipment","Combustible metals","Flammable liquids and gases","Kitchen oils and fats"], c:2},
+  {id:14, t:"A fire involving a computer or toaster while plugged in is classified as:", o:["Class A","Class B","Class C","Class K"], c:2},
+  {id:15, t:"Magnesium and sodium fires are categorized as:", o:["Class B","Class C","Class D","Class K"], c:2},
+  {id:16, t:"The weight of a volume of pure gas compared to the weight of an equal volume of dry air is:", o:["Specific gravity","Vapor density","Vapor pressure","Molecular weight"], c:1},
+  {id:17, t:"What is the primary oxidizing agent in most fires?", o:["Nitrogen","Carbon Dioxide","Oxygen","Hydrogen"], c:2},
+  {id:18, t:"The 'Decay' stage of fire is usually caused by the exhaustion of:", o:["Heat","Fuel or Oxygen","Chemical reaction","Nitrogen"], c:1},
+  {id:19, t:"If oxygen is diluted below ____%, a fire will generally be extinguished.", o:["21%","18%","15%","10%"], c:2},
+  {id:20, t:"Which method of heat transfer involves electromagnetic waves?", o:["Conduction","Radiation","Convection","Evaporation"], c:1},
+  {id:21, t:"The lowest temperature at which a liquid produces enough vapor to continue burning after ignition is the:", o:["Flash point","Fire point","Melting point","Boiling point"], c:1},
+  {id:22, t:"What is the percentage of oxygen in normal atmospheric air?", o:["16%","21%","78%","1%"], c:1},
+  {id:23, t:"Which component of the Fire Tetrahedron represents the source of ignition?", o:["Fuel","Oxygen","Heat","Chemical Reaction"], c:2},
+  {id:24, t:"A 'Backdraft' is a potential hazard during which stage of fire if oxygen is suddenly introduced?", o:["Incipient","Growth","Fully Developed","Smoldering/Decay"], c:3},
+  {id:25, t:"The smallest particles of elements that take part in a chemical reaction are:", o:["Molecules","Electrons","Atoms","Protons"], c:2},
+  {id:26, t:"Which of the following is a 'solid' fuel?", o:["Turpentine","Acetylene","Finely divided coal","Varnish"], c:2},
+  {id:27, t:"'Vapor pressure' is the force exerted by molecules on the surface of a liquid at:", o:["Boiling","Freezing","Equilibrium","Ignition"], c:2},
+  {id:28, t:"Heat is a form of ______ energy.", o:["Potential","Kinetic","Static","Chemical"], c:1},
+  {id:29, t:"Which term refers to the temperature at which a liquid transforms into vapor?", o:["Fire point","Flash point","Boiling point","Ignition point"], c:2},
+  {id:30, t:"Carbon Monoxide is a byproduct of:", o:["Complete combustion","Incomplete combustion","Rapid cooling","Vaporization"], c:1},
+  {id:31, t:"Which material has high thermal conductivity?", o:["Wood","Paper","Copper","Rubber"], c:2},
+  {id:32, t:"The 'Growth' stage of fire is influenced heavily by the _____ of the room.", o:["Color","Configuration and ventilation","Furniture brand","Floor material"], c:1},
+  {id:33, t:"A 'thermal layer' in a room fire consists of:", o:["Cold air at top, hot smoke at bottom","Uniformly distributed heat","Hot gases at top, cooler air at bottom","Only oxygen"], c:2},
+  {id:34, t:"Which fuel exists in a gaseous state?", o:["Propane","Kerosene","Plastic","Olive oil"], c:0},
+  {id:35, t:"The process of breaking down a solid fuel into flammable gases through heat is:", o:["Vaporization","Pyrolysis","Fusion","Condensation"], c:1},
+  {id:36, t:"Which element is most abundant in the atmosphere (approx. 78%)?", o:["Oxygen","Hydrogen","Nitrogen","Carbon"], c:2},
+  {id:37, t:"Specific gravity is used to compare the weight of a liquid to:", o:["Air","Water","Oil","Gasoline"], c:1},
+  {id:38, t:"Friction is a source of:", o:["Fuel","Chemical action","Heat","Oxygen"], c:2},
+  {id:39, t:"In the fire tetrahedron, 'smothering' removes which element?", o:["Heat","Fuel","Oxygen","Chemical Reaction"], c:2},
+  {id:40, t:"'Cooling' a fire primarily removes:", o:["Fuel","Heat","Oxygen","Chain reaction"], c:1},
+
+  // ── PART 2: FIREFIGHTING OPERATIONS (41–90) ───────────────────────────────
+  {id:41, t:"What is the first action a firefighter should take upon discovering a fire?", o:["Attack the fire","Size up the fire","Report the fire","Evacuate personnel"], c:2},
+  {id:42, t:"'Size-up' involves evaluating:", o:["The height of the fire truck","The location, size, and type of fire","The cost of the building","The manufacturer of the hoses"], c:1},
+  {id:43, t:"Which attack method involves applying the extinguishing agent directly to the seat of the fire?", o:["Indirect attack","Fog attack","Direct attack","Defensive attack"], c:2},
+  {id:44, t:"An 'indirect attack' is used when:", o:["You can see the base of the fire clearly","The seat of the fire is obstructed or the space is too hot","The fire is in the incipient stage","Using a fire extinguisher"], c:1},
+  {id:45, t:"What is the purpose of 'ventilation'?", o:["To add oxygen to make the fire burn faster","To remove smoke, heat, and toxic gases","To protect furniture from water","To signal other fire trucks"], c:1},
+  {id:46, t:"'Salvage' operations are intended to:", o:["Find the cause of the fire","Extinguish the final embers","Protect properties from preventable fire-related damage","Search for victims"], c:2},
+  {id:47, t:"'Overhaul' is the final task performed to:", o:["Rescue remaining victims","Prevent the fire from rekindling","Document firefighter names","Clean the fire truck"], c:1},
+  {id:48, t:"'Confinement' aims to:", o:["Put out the fire immediately","Keep the fire in the smallest possible area","Trap victims for easier rescue","Prevent smoke from escaping"], c:1},
+  {id:49, t:"Which phase of firefighting involves protecting uninvolved buildings from the fire?", o:["Confinement","Cover exposure","Salvage","Overhaul"], c:1},
+  {id:50, t:"The P.A.S.S. acronym for using a fire extinguisher stands for:", o:["Push, Aim, Squeeze, Sweep","Pull, Aim, Squeeze, Sweep","Pull, Activate, Squeeze, Swipe","Press, Aim, Shake, Sweep"], c:1},
+  {id:51, t:"In hose handling, the minimum personnel for sustained operation of a 1.5-inch hose is:", o:["1","2 (plus nozzleman)","5","10"], c:1},
+  {id:52, t:"The 'fog attack' is particularly useful when:", o:["The fire is outside","Overhead gases are burning (Rollover)","There is no smoke","Using a dry chemical extinguisher"], c:1},
+  {id:53, t:"'Active desmoking' is authorized for:", o:["Only Class A fires","Only Class B fires","All classes of fire","Only after the fire is out"], c:2},
+  {id:54, t:"What is the 'Bucket Brigade'?", o:["A modern BFP unit","The first known organized firefighting method, thousands of years B.C.","A tool for carrying equipment","A type of water tank"], c:1},
+  {id:55, t:"When performing ventilation, you should always consider:", o:["The time of day","The wind direction","The color of the smoke","The age of the building"], c:1},
+  {id:56, t:"'Triage' is the act of:", o:["Putting out three fires at once","Separating rescued victims to facilitate medical assistance","Using three types of hoses","Investigating the three sides of the fire triangle"], c:1},
+  {id:57, t:"Which strategy is used when a fire is too large to safely enter the building?", o:["Offensive","Defensive","Marginal","Indirect"], c:1},
+  {id:58, t:"The 'pre-alarm size-up' is based on:", o:["Arriving at the scene","Information received while in the station or en route","The post-fire investigation","The owner's statement"], c:1},
+  {id:59, t:"'Search and rescue' is a priority when the strategy is:", o:["Defensive","Marginal","Offensive","Overhaul"], c:2},
+  {id:60, t:"Hydraulic ventilation uses ______ to draw smoke out of a window.", o:["Fans","Fog streams","Ladders","Shovels"], c:1},
+  {id:61, t:"A 'catch-all' is used during which operation?", o:["Rescue","Ventilation","Salvage","Investigation"], c:2},
+  {id:62, t:"Where should 'overhaul' begin?", o:["At the front door","At the perimeter and work toward the point of origin","At the roof","Only where there is no smoke"], c:1},
+  {id:63, t:"Before entering a fire area, you should check a door for heat using:", o:["Your bare palm","The back of your hand","A thermometer","Water"], c:1},
+  {id:64, t:"Vertical ventilation involves making an opening in the:", o:["Wall","Floor","Roof","Door"], c:2},
+  {id:65, t:"What is 'exposure' in firefighting?", o:["Any person watching the fire","Any building or material likely to become involved with an existing fire","The amount of water used","The time the fire lasted"], c:1},
+  {id:66, t:"'Initial attack' is performed by:", o:["The fire investigator","The first responders / RRT","The building owner","The police"], c:1},
+  {id:67, t:"Which hose nozzle provides a variety of stream patterns?", o:["Solid stream nozzle","Vari-nozzle","Smooth bore nozzle","Pipe nozzle"], c:1},
+  {id:68, t:"'Forcible entry' is used when:", o:["The door is unlocked","Regular entry is blocked or locked","The fire is already out","The owner is present"], c:1},
+  {id:69, t:"When attacking a fire in a room, you should stay:", o:["As high as possible","Low to the floor","In the middle of the room","Near the ceiling"], c:1},
+  {id:70, t:"A 'secondary search' is conducted:", o:["At the same time as the primary search","Only if the owner asks","After the fire is under control and visibility improves","By the police"], c:2},
+  {id:71, t:"In the phases of firefighting operations, 'Rescue' is the:", o:["1st phase","2nd phase","9th phase","Last phase"], c:1},
+  {id:72, t:"What is 'tactical ventilation'?", o:["Opening all windows at once","The planned and systematic removal of smoke and heat","Using a hose to push smoke","Waiting for the fire to break the glass"], c:1},
+  {id:73, t:"A 'strategic plan' in incident command is:", o:["A list of tools","An overall plan for controlling an incident","A map of the city","A phone directory"], c:1},
+  {id:74, t:"The 'Incident Commander' is responsible for:", o:["Only driving the truck","Overall management of the incident","Holding the hose","Investigating the cause"], c:1},
+  {id:75, t:"Which is a type of mechanical ventilation?", o:["Opening a door","Breaking a window","Using a smoke ejector (fan)","Wind"], c:2},
+  {id:76, t:"What is the 'point of origin'?", o:["Where the fire truck parked","The exact location where the fire started","The fire station","The hospital"], c:1},
+  {id:77, t:"Water is the most common extinguishing agent because of its:", o:["Color","High heat absorption capacity","Weight","Taste"], c:1},
+  {id:78, t:"'Drafting' water means:", o:["Drawing water from a static source like a pond","Using a fire hydrant","Filling the truck at the station","Carrying water in buckets"], c:0},
+  {id:79, t:"Which firefighting agent is best for Class C fires?", o:["Water","Foam","CO₂ or Dry Chemical","Wet chemical"], c:2},
+  {id:80, t:"A 'Siamese connection' is used to:", o:["Split one hose into two","Combine two hoses into one supply line","Connect a hose to a hydrant","Change the nozzle"], c:1},
+  {id:81, t:"A 'Wye connection' is used to:", o:["Combine two lines","Split one line into two or more","Drain the hose","Store the hose"], c:1},
+  {id:82, t:"Fire hoses are typically stored in:", o:["Buckets","Racks or reels","Boxes","Bags"], c:1},
+  {id:83, t:"'Checking for fire spread' is a key part of:", o:["Sizing up","Overhaul","Salvage","Rescue"], c:1},
+  {id:84, t:"What is the primary danger of 'backdraft'?", o:["Excessive water damage","Explosive re-ignition","The fire going out too fast","Too much smoke"], c:1},
+  {id:85, t:"In a high-rise fire, the 'Base' is usually located:", o:["On the roof","On the fire floor","Two floors below the fire floor","Outside the building"], c:2},
+  {id:86, t:"What is a 'standpipe'?", o:["A tool for prying","A vertical pipe in a building for hose attachment","A type of ladder","A hydrant"], c:1},
+  {id:87, t:"A 'Fire Brigade' is required for establishments with at least:", o:["10 persons","20 persons","50 persons","100 persons"], c:2},
+  {id:88, t:"'Life safety' is always the:", o:["Last priority","Secondary priority","Number one priority","Optional priority"], c:2},
+  {id:89, t:"What does the term 'confinement' mean in firefighting?", o:["Extinguishing the fire completely","Restricting fire spread to the smallest area possible","Trapping suspects","Containing smoke only"], c:1},
+  {id:90, t:"The 'Offensive strategy' is used when:", o:["Conditions are too dangerous to enter","Firefighters can safely enter and attack the fire from the interior","The building is already collapsed","Only water is available"], c:1},
+
+  // ── PART 3: TOOLS & PPE (91–120) ─────────────────────────────────────────
+  {id:91,  t:"What tool has a pick on one end and a blade on the other for cutting and piercing?", o:["Flat-head axe","Pick-head axe","Sledgehammer","Crowbar"], c:1},
+  {id:92,  t:"A 'Halligan tool' is primarily used for:", o:["Spraying water","Forcible entry and prying","Cutting wood","Breathing"], c:1},
+  {id:93,  t:"Which PPE protects the firefighter's head from falling debris and heat?", o:["Bunker coat","Helmet","Gloves","Suspender"], c:1},
+  {id:94,  t:"The OBA (Oxygen Breathing Apparatus) is designed to:", o:["Protect the eyes","Protect the respiratory system in harmful atmospheres","Help the firefighter swim","Filter smoke using a cloth"], c:1},
+  {id:95,  t:"The life of a single OBA canister under 'hard work' conditions is approximately:", o:["10 minutes","30 minutes","45 minutes","120 minutes"], c:2},
+  {id:96,  t:"What color is the OBA quick-starting canister?", o:["Red","Blue","Green","Yellow"], c:2},
+  {id:97,  t:"WARNING: OBA canisters should NEVER come in contact with ______ as it may cause an explosion.", o:["Water","Oil or grease","Nitrogen","Carbon"], c:1},
+  {id:98,  t:"Which tool is used to pull apart debris, open walls, and ceilings?", o:["Pike pole","Power saw","Nozzle","Spanner wrench"], c:0},
+  {id:99,  t:"'Spanner wrenches' are used to:", o:["Cut wires","Tighten or loosen hose couplings","Pry doors","Break glass"], c:1},
+  {id:100, t:"A 'hard suction hose' is used for:", o:["Indoor firefighting","Drafting water from a static source","Connecting to a nozzle","High-pressure attack"], c:1},
+  {id:101, t:"Protective gloves provide thermal protection and shield against:", o:["Only heat","Only water","Cuts, punctures, and scrapes","Radiation only"], c:2},
+  {id:102, t:"'Self-Contained Breathing Apparatus' (SCBA) provides:", o:["Filtered air from the room","A portable supply of breathable air","Only oxygen","Water to the firefighter"], c:1},
+  {id:103, t:"A 'bolt cutter' is used for:", o:["Cutting wood","Cutting heavy bolts, chains, and padlocks","Prying doors","Breaking concrete"], c:1},
+  {id:104, t:"Which tool is used as a lever to force apart objects or remove nails?", o:["Pick-head axe","Crowbar / manual prying tool","Pike pole","Handsaw"], c:1},
+  {id:105, t:"'Hydraulic rescue equipment' (e.g., Jaws of Life) is used to:", o:["Spray water","Rescue victims by removing or cutting obstacles","Extinguish Class D fires","Detect smoke"], c:1},
+  {id:106, t:"A 'K-tool' is specifically designed for:", o:["Cutting holes in roofs","Pulling lock cylinders","Breaking windows","Pumping water"], c:1},
+  {id:107, t:"Firefighter boots must be:", o:["Fashionable","Puncture-resistant and water-repellent","Made of canvas","Open-toed"], c:1},
+  {id:108, t:"What is the purpose of 'turnout gear' (bunker coat and trousers)?", o:["To keep the firefighter dry","To provide thermal protection against heat","To make the firefighter visible","All of the above"], c:3},
+  {id:109, t:"A 'life safety rope' is used for:", o:["Tying down ladders","Supporting the weight of firefighters or victims during rescue","Pulling the fire truck","Marking the fire perimeter"], c:1},
+  {id:110, t:"Which extinguishing agent is specifically designed for Class K fires?", o:["Dry chemical","CO₂","Wet chemical","Water"], c:2},
+  {id:111, t:"A 'nozzle' controls:", o:["Only the flow of water","The flow, reach, and shape of the water stream","The color of the water","The tank level"], c:1},
+  {id:112, t:"'Ground ladders' are used for:", o:["Only climbing to the roof","Access, escape, and ventilation","Carrying water","Breaking doors"], c:1},
+  {id:113, t:"A 'flat-head axe' is a vital addition to a forcible entry team because it can be used as a:", o:["Prying tool","Striking tool","Breathing device","Hook"], c:1},
+  {id:114, t:"Which tool is driven by a motor and used for fast cutting?", o:["Handsaw","Power saw","Pike pole","Hammer"], c:1},
+  {id:115, t:"The 'Personal Alert Safety System' (PASS device) is used to:", o:["Talk to the captain","Alert others if a firefighter is motionless or in distress","Check the temperature","Open doors"], c:1},
+  {id:116, t:"A 'dry chemical' extinguisher works by:", o:["Cooling the fire","Interrupting the chemical chain reaction","Adding oxygen","Increasing heat"], c:1},
+  {id:117, t:"Fire boots are often made of:", o:["Leather or rubber","Plastic","Wood","Fabric"], c:0},
+  {id:118, t:"The 'couplings' on a fire hose are:", o:["The ends that connect hoses together","The middle of the hose","The holes in the hose","The water pumps"], c:0},
+  {id:119, t:"A 'smoke ejector' is a type of:", o:["Extinguisher","Fan used for ventilation","Nozzle","Axe"], c:1},
+  {id:120, t:"'Thermal imaging cameras' are used by firefighters to:", o:["Take photos for reports","Detect heat sources and locate victims through smoke","Measure water pressure","Test hose couplings"], c:1},
+
+  // ── PART 4: FIRE CODE, BFP LAW & ARSON INVESTIGATION (121–180) ───────────
+  {id:121, t:"Which Republic Act established the Bureau of Fire Protection (BFP)?", o:["RA 9514","RA 6975","RA 10121","RA 1185"], c:1},
+  {id:122, t:"The 'Revised Fire Code of the Philippines' is embodied in:", o:["Presidential Decree No. 1185","RA 6975","RA 9514","RA 10121"], c:2},
+  {id:123, t:"The primary mandate of the BFP is to:", o:["Enforce traffic laws","Prevent and suppress destructive fires and investigate its causes","Prosecute criminal offenders","Collect business taxes"], c:1},
+  {id:124, t:"In arson investigation, 'alligatoring' refers to:", o:["Animals found at a fire scene","A charred pattern on wood resembling alligator skin","Liquid accelerant spread patterns","Burn patterns on metal"], c:1},
+  {id:125, t:"Small, deep 'alligator checks' in charred wood usually indicate:", o:["A slow, smoldering fire","Water damage prior to the fire","Intense heat or a fast-burning fire","Electrical fault"], c:2},
+  {id:126, t:"Common motives for arson include:", o:["Insurance fraud","Revenge or spite","Concealment of another crime","All of the above"], c:3},
+  {id:127, t:"Accelerants are substances used to:", o:["Extinguish fires","Speed up the spread and intensity of a fire","Detect smoke","Mark fire boundaries"], c:1},
+  {id:128, t:"Before cutting electrical wires at a fire investigation scene, an investigator should:", o:["Pour water on them","Cut them immediately","Photograph and document them first","Ignore them"], c:2},
+  {id:129, t:"When collecting liquid samples suspected of containing accelerants, you should use:", o:["Plastic bags","Paper bags","Open containers","Clean glass bottles or airtight metal cans"], c:3},
+  {id:130, t:"Arson is legally defined as:", o:["Any fire that causes damage","An accidental ignition of a structure","The intentional and malicious burning of property","A fire caused by negligence"], c:2},
+  {id:131, t:"'Prima facie' evidence of arson includes:", o:["A single point of origin","Simultaneous fires in different parts of a building","Natural fire causes","Accidental electrical faults"], c:1},
+  {id:132, t:"Who is primarily responsible for conducting fire safety inspections of buildings in the Philippines?", o:["Bureau of Fire Protection (BFP)","Philippine National Police (PNP)","Department of Public Works and Highways","Local Government Units only"], c:0},
+  {id:133, t:"A 'Fire Safety Practitioner' is:", o:["A building owner","A person qualified and accredited to conduct fire safety inspections","Any firefighter on duty","A licensed architect"], c:1},
+  {id:134, t:"'Abatement' in fire law refers to:", o:["Increasing the penalty for violations","Any act that removes or neutralizes a fire hazard","Installing additional sprinklers","Evacuating building occupants"], c:1},
+  {id:135, t:"A 'Fire Safety Clearance' is required when:", o:["Only in high-rise buildings","Storing flammable liquids or hazardous materials in establishments","Only for residential buildings","Only for government offices"], c:1},
+  {id:136, t:"Which burn pattern helps an investigator determine the 'Point of Origin'?", o:["Circular pattern on the ceiling","V-pattern on walls","Horizontal char lines on floors","Square burn marks"], c:1},
+  {id:137, t:"When fire spreads upward and outward from an ignition point, it typically forms a:", o:["U-shape","X-shape","V-shape","O-shape"], c:2},
+  {id:138, t:"'Trailers' in arson investigation are:", o:["Evidence tags placed at the scene","Materials deliberately used to spread fire from one area to another","Fire marks on victims","Footprints left by the arsonist"], c:1},
+  {id:139, t:"The Bureau of Fire Protection (BFP) operates under which government department?", o:["Department of National Defense (DND)","Department of the Interior and Local Government (DILG)","Department of Justice (DOJ)","Department of Labor and Employment (DOLE)"], c:1},
+  {id:140, t:"'Clandestine' in the context of fire investigation means:", o:["Official and authorized","Done in secret or hidden","Accidental and unplanned","Publicly witnessed"], c:1},
+  {id:141, t:"Under RA 9514, the penalty for violation of the Fire Code can include:", o:["Only a verbal warning","Only community service","Fines and/or imprisonment","Only revocation of business permit"], c:2},
+  {id:142, t:"Which of the following is NOT considered a 'fire hazard' under the Fire Code?", o:["Blocked emergency exits","Improperly stored flammable liquids","A properly maintained fire extinguisher","Overloaded electrical outlets"], c:2},
+  {id:143, t:"A 'Certificate of Occupancy' from the BFP perspective requires a valid:", o:["Business permit only","Fire Safety Inspection Certificate (FSIC)","Tax clearance","Mayor's permit only"], c:1},
+  {id:144, t:"Which of the following best describes 'spontaneous combustion'?", o:["Fire caused by arson","Ignition without an external heat source due to internal chemical reactions","Fire caused by lightning","An explosion from gas leaks"], c:1},
+  {id:145, t:"The 'char depth' at a fire scene is used to determine:", o:["The age of the building","The duration and intensity of the fire at a given point","The brand of material used","The number of victims"], c:1},
+  {id:146, t:"Which of the following is an indicator of a possible electrical fire origin?", o:["Clean, undamaged wiring","Beaded or melted copper conductors","Wet electrical panels","Loose junction boxes with no damage"], c:1},
+  {id:147, t:"The 'chain of custody' in fire investigation is important to:", o:["Speed up the investigation process","Ensure evidence integrity and admissibility in court","Identify all fire victims","Calculate insurance claims"], c:1},
+  {id:148, t:"Under RA 9514, all buildings must have fire extinguishers inspected at least:", o:["Every 5 years","Every 3 years","Annually","Monthly"], c:2},
+  {id:149, t:"A 'fire load' refers to:", o:["The weight of the fire truck","The total amount of combustible materials in a given space","The number of firefighters on duty","Water pressure in the fire hose"], c:1},
+  {id:150, t:"Emergency exit signs must be:", o:["Painted green only","Visible only during daytime","Illuminated or self-luminous at all times","Optional for small buildings"], c:2},
+  {id:151, t:"Emergency lighting in buildings must function for at least:", o:["30 minutes","1 hour","1.5 hours","30 seconds"], c:2},
+  {id:152, t:"Standard automatic fire sprinklers are typically activated at a temperature of approximately:", o:["50°C (122°F)","68°C (155°F)","100°C (212°F)","150°C (302°F)"], c:1},
+  {id:153, t:"A 'fire door' is designed to:", o:["Provide ventilation during a fire","Resist the passage of fire and smoke for a rated period","Serve as an emergency exit sign","Allow firefighters to enter the building"], c:1},
+  {id:154, t:"The term 'fire wall' refers to:", o:["A wall with fire painted on it","A wall with sufficient fire-resistance rating to prevent fire spread between buildings or sections","A fireproof door","The wall nearest to the fire origin"], c:1},
+  {id:155, t:"What does 'FSIC' stand for in BFP operations?", o:["Fire Safety Inspection Certificate","Fire Station Incident Command","Fire Service Inventory Check","Fire Scene Investigation Certificate"], c:0},
+  {id:156, t:"Who heads the Bureau of Fire Protection?", o:["Secretary of DILG","Fire Director General","Chief of Staff, AFP","Commissioner of BFP"], c:1},
+  {id:157, t:"'Pyromania' is best defined as:", o:["Fear of fire","The study of fire science","An obsessive urge to set fires","A type of fire extinguisher"], c:2},
+  {id:158, t:"Which is the correct order of BFP firefighting priorities?", o:["Property, Life Safety, Environment","Life Safety, Incident Stabilization, Property Conservation","Property Conservation, Life Safety, Suppression","Suppression, Rescue, Salvage"], c:1},
+  {id:159, t:"Under RA 9514, establishments that fail to comply with the Fire Code are subject to:", o:["Only warnings for first-time offenses","Closure and/or fines","Only fines, never closure","Community service only"], c:1},
+  {id:160, t:"'Negative corpus delicti' in arson investigation means:", o:["Proof that arson was committed","Evidence that the fire was NOT accidental or natural in origin","Lack of any physical evidence","A confession from the suspect"], c:1},
+  {id:161, t:"A 'dry pipe sprinkler system' is used in areas where:", o:["There is high water pressure","Pipes might freeze in cold temperatures","Water supply is limited","There are Class D materials"], c:1},
+  {id:162, t:"Which of the following is considered a 'Class A' combustible material?", o:["Gasoline","Wood","Magnesium","Cooking oil"], c:1},
+  {id:163, t:"The term 'occupancy' in the Fire Code refers to:", o:["The number of people in a building","The purpose or use of a building or structure","The age of the building","The fire rating of a structure"], c:1},
+  {id:164, t:"A Siamese connection installed on a building's exterior allows:", o:["Drainage of water after firefighting","Fire department pumpers to supplement the building's water supply","Connection of two hoses to one hydrant","Ventilation of smoke"], c:1},
+  {id:165, t:"Which of the following best describes 'fuel gas'?", o:["Any liquid that burns","Any solid material that ignites","Gas used as fuel such as LPG or natural gas","Smoke produced by burning fuel"], c:2},
+  {id:166, t:"What is a 'conflagration'?", o:["A small, contained fire","A large, destructive fire that spreads quickly beyond control","A fire in a laboratory","A controlled burn"], c:1},
+  {id:167, t:"The purpose of a 'fire safety plan' in a building is to:", o:["Reduce insurance premiums only","Outline procedures for fire prevention, protection, and evacuation","Replace the need for fire extinguishers","Satisfy architectural requirements only"], c:1},
+  {id:168, t:"Under the Fire Code, a Fire Safety Inspector must inspect buildings at least:", o:["Every 5 years","Every 3 years","Once a year","Once a month"], c:2},
+  {id:169, t:"Which of the following is a 'passive fire protection' measure?", o:["Fire sprinkler systems","Fire extinguishers","Fire-resistant construction materials and compartmentalization","Smoke detectors"], c:2},
+  {id:170, t:"'Active fire protection' systems include:", o:["Fire-rated walls","Fire doors","Sprinkler systems and fire alarms","Non-combustible flooring"], c:2},
+  {id:171, t:"The 'fire point' is always ______ the 'flash point'.", o:["Lower than","Equal to","Higher than","Unrelated to"], c:2},
+  {id:172, t:"Which type of smoke detector uses a small amount of radioactive material?", o:["Photoelectric detector","Ionization detector","Heat detector","Beam detector"], c:1},
+  {id:173, t:"A 'backdraft explosion' can be prevented by:", o:["Opening all windows immediately","Flooding the room with water","Proper ventilation at the top before entry","Cutting the electrical supply"], c:2},
+  {id:174, t:"Under RA 9514, the BFP is authorized to collect fees for:", o:["Traffic violations","Fire safety inspections and certifications","Driving licenses","Building design reviews"], c:1},
+  {id:175, t:"What does 'BLEVE' stand for?", o:["Building Level Emergency Ventilation Event","Boiling Liquid Expanding Vapor Explosion","Basic Level Explosive Vapor Event","Bureau Level Emergency Ventilation Exercise"], c:1},
+  {id:176, t:"A 'fire safety officer' in an establishment is responsible for:", o:["Managing the payroll","Implementing the fire safety program and coordinating with BFP","Hiring security guards","Managing food safety"], c:1},
+  {id:177, t:"RA 9514 repealed and replaced which earlier law?", o:["RA 6975","RA 10121","Presidential Decree No. 1185","Executive Order No. 292"], c:2},
+  {id:178, t:"Which of the following statements about RA 9514 is TRUE?", o:["It applies only to commercial buildings","It was enacted to replace PD 1185 with updated fire safety standards","It was enacted in 1975","It is enforced by the PNP, not the BFP"], c:1},
+  {id:179, t:"The BFP's Quick Response Team (QRT) is responsible for:", o:["Administrative duties only","Immediate response to fire and medical emergencies","Training new recruits","Building inspections only"], c:1},
+  {id:180, t:"Under RA 9514, establishments are required to conduct a fire drill at least:", o:["Once every 5 years","Once every 3 years","Once a year","Twice a year"], c:3},
+];
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+const answers    = {};
+let   submitted  = false;
+
+// Section labels
+const sections = [
+  { from:1,   to:40,  label:"Part 1 — Fire Science" },
+  { from:41,  to:90,  label:"Part 2 — Firefighting Operations" },
+  { from:91,  to:120, label:"Part 3 — Tools & PPE" },
+  { from:121, to:180, label:"Part 4 — Fire Code, BFP Law & Arson Investigation" },
+];
+
+// ─────────────────────────────────────────
+//  RENDER QUESTIONS
+// ─────────────────────────────────────────
+function buildQuestions() {
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+
+  sections.forEach(sec => {
+    const divider = document.createElement('div');
+    divider.className = 'section-divider';
+    divider.innerHTML = `<h2>${sec.label}</h2>`;
+    container.appendChild(divider);
+
+    const grid = document.createElement('div');
+    grid.className = 'questions-grid';
+
+    Q.filter(q => q.id >= sec.from && q.id <= sec.to).forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `card-${q.id}`;
+
+      card.innerHTML = `
+        <div class="question-header">
+          <span class="q-num">Q${q.id}</span>
+          <div class="q-text">${q.t}</div>
+        </div>
+        <div class="options" id="opts-${q.id}">
+          ${q.o.map((opt,i) => `
+            <label class="option" id="opt-${q.id}-${i}" onclick="pick(${q.id},${i})">
+              <input type="radio" name="q${q.id}" value="${i}" ${answers[q.id]===i?'checked':''} ${submitted?'disabled':''}>
+              <span class="option-label">${String.fromCharCode(65+i)}. ${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
+  });
+}
+
+function pick(qid, idx) {
+  if (submitted) return;
+  answers[qid] = idx;
+
+  // Update radio visuals
+  const opts = document.querySelectorAll(`#opts-${qid} .option`);
+  opts.forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.querySelector(`#opts-${qid} input[value="${idx}"]`).checked = true;
+
+  // Update stats
+  const count = Object.keys(answers).length;
+  document.getElementById('answeredCount').textContent = count;
+  const pct = (count / 180) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('btnSubmit').disabled = (count < 180);
+}
+
+// ─────────────────────────────────────────
+//  SUBMIT
+// ─────────────────────────────────────────
+function submitExam() {
+  submitted = true;
+  let score = 0;
+  const wrong = [], correct_list = [];
+
+  Q.forEach(q => {
+    const userAns = answers[q.id] !== undefined ? answers[q.id] : -1;
+    const isCorrect = (userAns === q.c);
+    if (isCorrect) { score++; correct_list.push(q); }
+    else wrong.push({q, userAns});
+
+    // Highlight options
+    q.o.forEach((_, i) => {
+      const el = document.getElementById(`opt-${q.id}-${i}`);
+      if (!el) return;
+      el.classList.remove('selected');
+      if (i === q.c) el.classList.add('correct-ans');
+      else if (i === userAns) el.classList.add('wrong-ans');
+      const radio = el.querySelector('input');
+      if (radio) radio.disabled = true;
+    });
+  });
+
+  // Disable submit, show reset
+  document.getElementById('btnSubmit').style.display = 'none';
+  document.getElementById('btnReset').style.display  = 'flex';
+
+  renderResults(score, wrong);
+  document.getElementById('resultPanel').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ─────────────────────────────────────────
+//  RESULTS
+// ─────────────────────────────────────────
+function renderResults(score, wrong) {
+  const pct = ((score / 180) * 100).toFixed(1);
+  const passed = score >= 108; // 60% passing
+  const verdict = score >= 162 ? '🌟 Outstanding' :
+                  score >= 144 ? '✅ Excellent'   :
+                  score >= 126 ? '👍 Very Good'   :
+                  score >= 108 ? '📘 Passed'      : '❌ Needs Review';
+
+  const wrongCount = wrong.length;
+  const unanswered = Q.filter(q => answers[q.id] === undefined).length;
+
+  const reviewHTML = Q.map(q => {
+    const userAns  = answers[q.id] !== undefined ? answers[q.id] : -1;
+    const isCorrect = userAns === q.c;
+    const userLabel = userAns === -1 ? '<em>Not answered</em>'
+      : `<span class="${isCorrect?'ans-correct':'ans-wrong'}">${String.fromCharCode(65+userAns)}. ${q.o[userAns]}</span>`;
+    const correctLabel = `<span class="ans-correct">${String.fromCharCode(65+q.c)}. ${q.o[q.c]}</span>`;
+    return `
+      <div class="review-item ${isCorrect?'r-correct':'r-wrong'}">
+        <div class="icon-badge">${isCorrect?'✅':'❌'}</div>
+        <div class="review-qnum">Q${q.id}</div>
+        <div class="review-body">
+          <div class="review-qtext">${q.t}</div>
+          <div class="review-answers">Your answer: ${userLabel} &nbsp;|&nbsp; Correct: ${correctLabel}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('resultPanel').innerHTML = `
+    <div class="result-panel">
+      <div class="score-hero">
+        <h2>📊 Examination Result</h2>
+        <div class="score-big">${score} <span style="font-size:2rem;opacity:.6">/ 180</span></div>
+        <div class="score-pct">${pct}%</div>
+        <div class="score-verdict">${verdict}</div>
+      </div>
+      <div class="score-stats">
+        <div class="ss-item">
+          <div class="ss-val green">${score}</div>
+          <div class="ss-label">Correct</div>
+        </div>
+        <div class="ss-item">
+          <div class="ss-val red">${wrongCount + unanswered}</div>
+          <div class="ss-label">Incorrect / Missed</div>
+        </div>
+        <div class="ss-item">
+          <div class="ss-val" style="color:var(--gold)">${pct}%</div>
+          <div class="ss-label">Score</div>
+        </div>
+      </div>
+      <div class="review-header">📋 Detailed Answer Review</div>
+      <div class="review-list">${reviewHTML}</div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────
+//  RESET
+// ─────────────────────────────────────────
+function resetExam() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  submitted = false;
+  document.getElementById('answeredCount').textContent = '0';
+  document.getElementById('progressFill').style.width  = '0%';
+  document.getElementById('btnSubmit').disabled = true;
+  document.getElementById('btnSubmit').style.display = 'flex';
+  document.getElementById('btnReset').style.display  = 'none';
+  document.getElementById('resultPanel').innerHTML    = '';
+  buildQuestions();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+buildQuestions();
 </script>
 </body>
 </html>
