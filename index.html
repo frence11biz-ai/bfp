@@ -449,14 +449,14 @@ function buildQuestions() {
     const grid = document.createElement('div');
     grid.className = 'questions-grid';
 
-    Q.filter(q => q.id >= sec.from && q.id <= sec.to).forEach(q => {
+    SHUFFLED.filter(q => q.id >= sec.from && q.id <= sec.to).forEach(q => {
       const card = document.createElement('div');
       card.className = 'question-card';
       card.id = `card-${q.id}`;
 
       card.innerHTML = `
         <div class="question-header">
-          <span class="q-num">Q${q.id}</span>
+          <span class="q-num">Q${q.num}</span>
           <div class="q-text">${q.t}</div>
         </div>
         <div class="options" id="opts-${q.id}">
@@ -502,7 +502,7 @@ function submitExam() {
   let score = 0;
   const wrong = [], correct_list = [];
 
-  Q.forEach(q => {
+  SHUFFLED.forEach(q => {
     const userAns = answers[q.id] !== undefined ? answers[q.id] : -1;
     const isCorrect = (userAns === q.c);
     if (isCorrect) { score++; correct_list.push(q); }
@@ -540,9 +540,9 @@ function renderResults(score, wrong) {
                   score >= 108 ? '📘 Passed'      : '❌ Needs Review';
 
   const wrongCount = wrong.length;
-  const unanswered = Q.filter(q => answers[q.id] === undefined).length;
+  const unanswered = SHUFFLED.filter(q => answers[q.id] === undefined).length;
 
-  const reviewHTML = Q.map(q => {
+  const reviewHTML = SHUFFLED.map(q => {
     const userAns  = answers[q.id] !== undefined ? answers[q.id] : -1;
     const isCorrect = userAns === q.c;
     const userLabel = userAns === -1 ? '<em>Not answered</em>'
@@ -551,7 +551,7 @@ function renderResults(score, wrong) {
     return `
       <div class="review-item ${isCorrect?'r-correct':'r-wrong'}">
         <div class="icon-badge">${isCorrect?'✅':'❌'}</div>
-        <div class="review-qnum">Q${q.id}</div>
+        <div class="review-qnum">Q${q.num}</div>
         <div class="review-body">
           <div class="review-qtext">${q.t}</div>
           <div class="review-answers">Your answer: ${userLabel} &nbsp;|&nbsp; Correct: ${correctLabel}</div>
@@ -600,13 +600,52 @@ function resetExam() {
   document.getElementById('btnSubmit').style.display = 'flex';
   document.getElementById('btnReset').style.display  = 'none';
   document.getElementById('resultPanel').innerHTML    = '';
+  prepareQuestions();
   buildQuestions();
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 // ─────────────────────────────────────────
+//  SHUFFLE HELPERS
+// ─────────────────────────────────────────
+
+// Fisher-Yates shuffle (in-place)
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Deep-clone and randomize the question bank:
+//  - Shuffles question order within each section
+//  - Shuffles each question's options while keeping 'c' pointing at the right answer
+//  - Assigns a sequential display number (num) so questions always show Q1–Q180
+let SHUFFLED = [];
+
+function prepareQuestions() {
+  // Clone each question and shuffle its options
+  const cloned = Q.map(q => {
+    const correctText = q.o[q.c];
+    const opts = [...q.o];
+    shuffle(opts);
+    const newCorrect = opts.indexOf(correctText);
+    return { ...q, o: opts, c: newCorrect };
+  });
+  // Shuffle question order within each section
+  const parts = sections.map(sec =>
+    shuffle(cloned.filter(q => q.id >= sec.from && q.id <= sec.to))
+  );
+  SHUFFLED = parts.flat();
+  // Assign sequential display numbers 1–180
+  SHUFFLED.forEach((q, i) => { q.num = i + 1; });
+}
+
+// ─────────────────────────────────────────
 //  INIT
 // ─────────────────────────────────────────
+prepareQuestions();
 buildQuestions();
 </script>
 </body>
